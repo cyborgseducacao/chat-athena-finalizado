@@ -374,14 +374,21 @@
         aula: "aula_geral",
       };
 
-      window.addEventListener('message', function(event) {
-        if (event.origin !== 'https://membros.iarevolution.com.br') {
-            return;
-        }
-        if (event.data && event.data.type === 'setAula') {
-          metadata.aula = event.data.aula.trim();
-        }
-      });
+window.addEventListener('message', function(event) {
+  // Aceita apenas da plataforma Cademí
+  if (event.origin !== 'https://membros.iarevolution.com.br') {
+      console.log('❌ Origem rejeitada:', event.origin);
+      return;
+  }
+  
+  console.log('📨 Mensagem recebida da Cademí:', event.data);
+  
+  if (event.data && event.data.type === 'setAula') {
+    const nomeAula = event.data.aula ? event.data.aula.trim() : 'aula_geral';
+    metadata.aula = nomeAula;
+    console.log('✅ Aula atualizada para:', nomeAula);
+  }
+});
 
       /* =======================================
          FUNÇÃO PARA REMOVER "Powered by n8n"
