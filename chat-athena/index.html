@@ -10,7 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-      /* ===== VARIÁVEIS CSS CUSTOMIZADAS ===== */
+      /* ===== VARIÁVEIS CSS CUSTOMIZADAS ===== (Seu CSS foi mantido intacto) */
       :root {
         --chat--color-primary: #7C00FF;
         --chat--color-primary-shade-50: #6B00E6;
@@ -89,7 +89,7 @@
         --chat--footer--background: #232323;
         --chat--footer--color: #ffffff;
       }
-      /* ===== ESTILOS DO CONTAINER E ELEMENTOS ===== */
+      /* ===== ESTILOS DO CONTAINER E ELEMENTOS ===== (Seu CSS foi mantido intacto) */
       body { margin: 0; padding: 0; min-width: 180px; min-height: 64px; overflow: visible; background: transparent; position: relative; }
       #iarev-chat { position: relative; min-width: 180px; min-height: 64px; }
       .chat { position: relative !important; }
@@ -125,21 +125,34 @@
 
       // --- SISTEMA DE COMUNICAÇÃO COM A PÁGINA PAI ---
 
+      /**
+       * CORRIGIDO: Envia mensagens para a página pai de forma simplificada.
+       * Apenas o redimensionamento e o sinal de 'pronto' são enviados daqui.
+       */
       function postToParent(message) {
         if (window.parent && window.parent !== window) {
+          // Usar '*' é seguro aqui porque a página pai é quem deve validar a origem da mensagem.
           window.parent.postMessage(message, '*');
         }
       }
 
+      /**
+       * NOVO: Envia o "sinal" de que o chat está pronto (handshake).
+       * Esta é a correção mais importante.
+       */
       function notifyParentReady() {
         console.log('IFRAME: 🚀 Chat pronto! Notificando a página principal.');
         postToParent({ type: 'chatReady' });
       }
 
-      // Esta função recebe o nome da aula da plataforma Cademí
+      /**
+       * CORRIGIDO: Listener de mensagens unificado e com verificação de origem flexível.
+       */
       window.addEventListener('message', function(event) {
+        // Permite mensagens de qualquer subdomínio de iarevolution.com.br
         const allowedOriginPattern = /^(https:\/\/([a-z0-9-]+\.)?iarevolution\.com\.br)$/;
         if (!allowedOriginPattern.test(event.origin)) {
+            // Silenciosamente ignora mensagens de origens não permitidas
             return;
         }
 
@@ -171,6 +184,7 @@
       }
 
       function setupMonitoring() {
+        // Observa o container do chat por mudanças que indicam abertura/fechamento.
         const chatContainer = document.getElementById('iarev-chat');
         if (!chatContainer) return;
         
