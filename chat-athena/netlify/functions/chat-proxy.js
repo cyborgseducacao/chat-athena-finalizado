@@ -4,7 +4,7 @@
 
 // ESTA É A URL REAL E SECRETA DO SEU WEBHOOK.
 // Ela só existe aqui, no servidor, e nunca será exposta ao público.
-const REAL_WEBHOOK_URL = 'https://webhook.iarev.com.br/webhook/2726fac2-5d6e-40d5-b89f-05172210e13e/chat';
+const REAL_WEBHOOK_URL = 'https://webhook.iarev.com.br/webhook/0b9617bf-5790-467c-928f-59d4b694138b/chat';
 
 // A "função" que a Netlify irá executar no servidor.
 exports.handler = async function(event) {
