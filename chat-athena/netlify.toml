@@ -1,7 +1,0 @@
-# VERSÃO ULTRA-SIMPLIFICADA DO netlify.toml
-
-# A única regra que precisamos: redirecionar a chamada da API para a função.
-[[redirects]]
-  from = "/api/chat-proxy"
-  to = "/.netlify/functions/chat-proxy"
-  status = 200
