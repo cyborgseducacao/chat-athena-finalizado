@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat IA Revolution</title>
+
+    <script>
+      const nomeModuloEstatico = 'agente_de_ia_com_n8n';
+    </script>
+
+    <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+      /* ===== VARIÁVEIS CSS CUSTOMIZADAS ===== */
+      :root {
+        /* --- CORES PRINCIPAIS --- */
+        --chat--color-primary: #7C00FF;
+        --chat--color-primary-shade-50: #6B00E6;
+        --chat--color-primary-shade-100: #5A00CC;
+        --chat--color-secondary: #7C00FF;
+        --chat--color-secondary-shade-50: #6B00E6;
+        --chat--color-dark: #7C00FF;
+        --chat--color-light: #232323;
+        --chat--color-white: #232323;
+        --chat--color-light-shade-50: #2a2a2a;
+        --chat--color-light-shade-100: #333333;
+        --chat--color-medium: #404040;
+        --chat--color-disabled: #777980;
+        --chat--color-typing: #ffffff;
+
+        /* --- LAYOUT E DIMENSÕES --- */
+        --chat--border-radius: 16px;
+        --chat--window--width: 420px;
+        --chat--window--height: 560px;
+        --chat--window--border: none;
+
+        /* --- CONFIGURAÇÕES DE FONTE --- */
+        --chat--font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+
+        /* --- HEADER (CABEÇALHO) --- */
+        --chat--header--background: #7C00FF;
+        --chat--header--color: #ffffff;
+        --chat--header--padding: 1.2rem;
+        --chat--heading--font-size: 2em;
+        --chat--subtitle--font-size: 0.9em;
+        --chat--subtitle--line-height: 1.2;
+
+        /* --- MENSAGENS --- */
+        --chat--message--bot--background: #333333;
+        --chat--message--bot--color: #ffffff;
+        --chat--message--bot--border: none;
+        --chat--message--user--background: #535353;
+        --chat--message--user--color: #ffffff;
+        --chat--message--user--border: none;
+        --chat--message--pre--background: rgba(255, 255, 255, 0.1);
+        --chat--messages-list--padding: 1rem;
+        --chat--message--font-size: 1rem;
+        --chat--message--padding: 1rem;
+        --chat--message--border-radius: 16px;
+        --chat--message-line-height: 1.5;
+        --chat--message--margin-bottom: 1rem;
+
+        /* --- ÁREA DE INPUT (DIGITAÇÃO) --- */
+        --chat--textarea--height: 50px;
+        --chat--textarea--max-height: 30rem;
+        --chat--input--font-size: inherit;
+        --chat--input--border: 0;
+        --chat--input--border-radius: 0;
+        --chat--input--padding: 0.8rem;
+        --chat--input--background: #232323;
+        --chat--input--text-color: #ffffff;
+        --chat--input--line-height: 1.5;
+        --chat--input--placeholder--font-size: inherit;
+        --chat--input--border-active: 0;
+        --chat--input--left--panel--width: 2rem;
+
+        /* --- BOTÕES GERAIS --- */
+        --chat--button--color: #ffffff;
+        --chat--button--background: #7C00FF;
+        --chat--button--padding: 0.5rem 1rem;
+        --chat--button--border-radius: 16px;
+        --chat--button--hover--color: #ffffff;
+        --chat--button--hover--background: #6B00E6;
+        --chat--close--button--color-hover: #7C00FF;
+
+        /* --- BOTÃO TOGGLE (ABRIR/FECHAR CHAT) --- */
+        --chat--toggle--size: 64px;
+        --chat--toggle--width: var(--chat--toggle--size);
+        --chat--toggle--height: var(--chat--toggle--size);
+        --chat--toggle--border-radius: 50%;
+        --chat--toggle--background: #7C00FF;
+        --chat--toggle--hover--background: #6B00E6;
+        --chat--toggle--active--background: #5A00CC;
+        --chat--toggle--color: #ffffff;
+
+        /* --- BOTÕES DE ENVIO E ARQUIVO --- */
+        --chat--input--send--button--background: #232323;
+        --chat--input--send--button--color: #ffffff;
+        --chat--input--send--button--background-hover: #7C00FF;
+        --chat--input--send--button--color-hover: #ffffff;
+        --chat--input--file--button--background: #232323;
+        --chat--input--file--button--color: #7C00FF;
+        --chat--input--file--button--background-hover: #333333;
+        --chat--input--file--button--color-hover: #6B00E6;
+        --chat--files-spacing: 0.25rem;
+
+        /* --- CORPO E RODAPÉ --- */
+        --chat--body--background: #232323;
+        --chat--footer--background: #232323;
+        --chat--footer--color: #ffffff;
+      }
+
+      /* ===== CUSTOMIZAÇÕES DE FONTES ===== */
+
+      /* Títulos e cabeçalhos usam a fonte Montserrat */
+      .chat-header h1,
+      .chat-header h2,
+      .chat-header h3,
+      .chat-title,
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Montserrat', sans-serif !important;
+        color: #ffffff !important;
+        font-weight: 600; /* Semi-bold */
+        margin-bottom: 0.1em !important; /* Espaçamento reduzido entre título e subtítulo */
+        margin-top: 0 !important; /* Remove margem superior */
+      }
+
+      /* Título principal com configurações específicas */
+      .chat-header h1,
+      .chat-title {
+        font-weight: 600 !important;
+        line-height: 1.1 !important; /* Linha mais compacta para o título */
+      }
+
+      /* Subtítulo com espaçamento otimizado */
+      .chat-header p,
+      .chat-subtitle {
+        font-family: 'Montserrat', sans-serif !important;
+        font-weight: 600 !important;
+        color: #ffffff !important;
+        margin-top: 0 !important; /* Remove margem superior */
+        margin-bottom: 0.5em !important; /* Margem inferior reduzida */
+      }
+
+      /* Textos gerais usam a fonte Poppins */
+      .chat-message,
+      .chat-input,
+      .chat-body,
+      p, span, div, input, textarea {
+        font-family: 'Poppins', sans-serif !important;
+        color: #ffffff !important;
+      }
+
+      /* ===== CUSTOMIZAÇÕES ESPECÍFICAS ===== */
+
+      /* Cor do texto placeholder (texto de ajuda no input) */
+      input::placeholder,
+      textarea::placeholder {
+        color: #999999 !important; /* Cinza mais suave para melhor legibilidade */
+        opacity: 1;
+      }
+
+      /* Largura das mensagens aumentada para melhor aproveitamento do espaço */
+      .chat-message {
+        max-width: 80% !important; /* Aumentado de 50% para 80% */
+        color: #ffffff !important;
+      }
+
+      /* Especificamente para mensagens do bot (agente) */
+      .chat-message--bot,
+      .chat__message--bot {
+        max-width: 80% !important;
+      }
+
+      /* ===== SCROLLBAR CUSTOMIZADA ===== */
+      /* Barra de rolagem personalizada para combinar com o tema */
+      ::-webkit-scrollbar {
+        width: 8px; /* Largura da barra de rolagem */
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #232323; /* Fundo da trilha da barra de rolagem */
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #7C00FF; /* Cor da barra de rolagem (roxo) */
+        border-radius: 6px; /* Arredondamento da barra */
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #6B00E6; /* Cor da barra ao passar o mouse */
+      }
+
+      /* ===== CUSTOMIZAÇÕES DO BOTÃO TOGGLE ===== */
+
+      /* Botão para abrir o chat com texto personalizado */
+      .chat__toggle {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: auto !important;
+        min-width: 180px !important; /* Largura mínima para acomodar o texto */
+        border-radius: 30px !important; /* Botão oval */
+        padding: 0 20px !important; /* Espaçamento interno horizontal */
+        font-family: 'Poppins', sans-serif !important;
+      }
+
+      /* Ícone dentro do botão toggle */
+      .chat__toggle svg {
+        display: inline-block !important;
+        margin-right: 10px !important; /* Espaçamento entre ícone e texto */
+        width: 24px !important;
+        height: 24px !important;
+      }
+
+      /* Texto que aparece no botão toggle */
+      .chat__toggle::after {
+        content: "Tire Dúvidas com IA"; /* Texto exibido no botão */
+        display: inline-block;
+        color: white;
+        font-size: 14px;
+        font-weight: 500;
+        font-family: 'Poppins', sans-serif !important;
+      }
+
+      /* ===== ELEMENTOS OCULTOS ===== */
+
+      /* Esconde o botão "Get Started" caso showWelcomeScreen seja true */
+      .chat__welcome-screen-button {
+        display: none !important;
+      }
+
+      /* SOLUÇÕES ROBUSTAS PARA ESCONDER "Powered by n8n" */
+
+      /* Método 1: Esconde o texto por seletor mais específico */
+      .chat__footer > span,
+      .chat__footer span,
+      span.svelte-15j5n1q { /* Seletor específico gerado pelo Svelte */
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        font-size: 0 !important;
+      }
+
+      /* Método 2: Esconde por conteúdo de texto */
+      span:has-text("Powered by"),
+      span:has-text("n8n") {
+        display: none !important;
+      }
+
+      /* Método 3: Remove altura do rodapé se necessário */
+      .chat__footer:empty {
+        height: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      /* Método 4: Força ocultação por posição */
+      .chat__footer {
+        position: relative !important;
+      }
+
+      .chat__footer > * {
+        position: absolute !important;
+        left: -9999px !important;
+        opacity: 0 !important;
+      }
+    </style>
+</head>
+<body style="margin: 0;">
+
+    <div id="iarev-chat"></div>
+
+    <script type="module">
+      // Importa a biblioteca do N8N Chat
+      import { createChat } from "https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js";
+
+      /* =======================================
+         PREVENÇÃO DE MÚLTIPLAS INSTÂNCIAS
+       ======================================= */
+      if (window.__iarevChat) {
+        window.__iarevChat.destroy?.(); // Destrói a instância anterior se existir
+      }
+
+      /* =======================================
+         CONFIGURAÇÃO DE METADADOS
+       ======================================= */
+
+      // Objeto de metadados enviado com cada mensagem
+      const metadata = {
+        modulo: nomeModuloEstatico, // Nome estático do módulo
+        aula: "aula_geral",         // Valor inicial padrão
+      };
+      
+      /* =======================================
+         RECEPTOR DE MENSAGENS DA PÁGINA PRINCIPAL
+       ======================================= */
+      window.addEventListener('message', function(event) {
+        // Medida de segurança: apenas aceita mensagens vindas do seu domínio
+        if (event.origin !== 'https://membros.iarevolution.com.br') {
+            return; // Ignora mensagens de qualquer outra origem
+        }
+
+        // Verifica se a mensagem tem o tipo e os dados que esperamos
+        if (event.data && event.data.type === 'setAula') {
+          // Atribui o nome da aula diretamente, preservando a formatação original
+          metadata.aula = event.data.aula.trim();
+        }
+      });
+
+      /* =======================================
+         FUNÇÃO PARA REMOVER "Powered by n8n"
+       ======================================= */
+      function removePoweredByN8n() {
+        // Método 1: Remove por seletor direto
+        const footerElements = document.querySelectorAll('.chat__footer span, .chat__footer > span, span.svelte-15j5n1q');
+        footerElements.forEach(el => {
+          if (el.textContent.includes('Powered by') || el.textContent.includes('n8n')) {
+            el.remove();
+          }
+        });
+
+        // Método 2: Remove por conteúdo de texto usando TreeWalker
+        const walker = document.createTreeWalker(
+          document.getElementById('iarev-chat'),
+          NodeFilter.SHOW_TEXT,
+          null,
+          false
+        );
+
+        let node;
+        const nodesToRemove = [];
+        while (node = walker.nextNode()) {
+          if (node.textContent.includes('Powered by n8n')) {
+            nodesToRemove.push(node.parentElement);
+          }
+        }
+
+        nodesToRemove.forEach(el => {
+          if (el) el.remove();
+        });
+
+        // Método 3: Limpa o rodapé completamente se ainda contém texto indesejado
+        const footer = document.querySelector('.chat__footer');
+        if (footer && footer.textContent.includes('Powered by')) {
+          footer.innerHTML = '';
+          footer.style.display = 'none';
+        }
+      }
+
+      /* =======================================
+         CRIAÇÃO E CONFIGURAÇÃO DO CHAT
+       ======================================= */
+      window.__iarevChat = createChat({
+        target: "#iarev-chat", // Elemento onde o chat será renderizado
+
+        // URL do webhook do N8N (agora apontando para o proxy seguro)
+        webhookUrl: "/api/chat-proxy",
+
+        metadata, // Metadados enviados com cada requisição
+
+        // Controla se mostra tela de boas-vindas antes do chat
+        showWelcomeScreen: false,
+
+        // Mensagens que aparecem automaticamente quando o chat é aberto
+        initialMessages: [
+            "Olá! Sou a Athena, monitora do IA Revolution. Me fala qual é sua pergunta sobre essa aula, que vou te ajudar 😄"
+        ],
+
+        // Textos personalizados da interface
+        i18n: {
+          en: { // Usa 'en' como chave padrão para controlar os textos
+            title: 'Athena IA 🧠',                  // Título do chat
+            subtitle: "Sua Monitora do IA Revolution!", // Subtítulo do chat
+            inputPlaceholder: "Digite sua dúvida aqui…", // Texto de ajuda no campo de digitação
+          }
+        }
+      });
+
+      /* =======================================
+         REMOÇÃO DO "Powered by n8n" COM MÚLTIPLAS TENTATIVAS
+       ======================================= */
+
+      // Executa a remoção imediatamente após a criação
+      setTimeout(removePoweredByN8n, 100);
+
+      // Executa novamente após 500ms para garantir
+      setTimeout(removePoweredByN8n, 500);
+
+      // Executa uma terceira vez após 1 segundo
+      setTimeout(removePoweredByN8n, 1000);
+
+      // Executa uma quarta vez após 2 segundos para casos mais lentos
+      setTimeout(removePoweredByN8n, 2000);
+
+      // Observer para detectar mudanças no DOM e remover o texto se aparecer
+      const observer = new MutationObserver(function(mutations) {
+        let shouldCheck = false;
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+            shouldCheck = true;
+          }
+        });
+
+        if (shouldCheck) {
+          setTimeout(removePoweredByN8n, 100);
+        }
+      });
+
+      // Inicia o observer no container do chat
+      setTimeout(() => {
+        const chatContainer = document.getElementById('iarev-chat');
+        if (chatContainer) {
+          observer.observe(chatContainer, {
+            childList: true,
+            subtree: true
+          });
+        }
+      }, 1000);
+
+      /* =======================================
+         CUSTOMIZAÇÃO ADICIONAL DO BOTÃO TOGGLE
+       ======================================= */
+      setTimeout(() => {
+        const toggleButton = document.querySelector('.chat__toggle');
+        if (toggleButton) {
+          // Configura o ícone SVG existente
+          const svgIcon = toggleButton.querySelector('svg');
+          if (svgIcon) {
+            svgIcon.style.marginRight = '10px';
+          }
+
+          // Cria e adiciona o texto ao botão
+          const textSpan = document.createElement('span');
+          textSpan.textContent = 'Tire Dúvidas com IA';
+          textSpan.style.color = 'white';
+          textSpan.style.fontSize = '14px';
+          textSpan.style.fontWeight = '500';
+          textSpan.style.fontFamily = "'Poppins', sans-serif";
+
+          toggleButton.appendChild(textSpan);
+
+          // Aplica estilos finais ao botão
+          toggleButton.style.display = 'flex';
+          toggleButton.style.alignItems = 'center';
+          toggleButton.style.justifyContent = 'center';
+          toggleButton.style.width = 'auto';
+          toggleButton.style.minWidth = '180px';
+          toggleButton.style.borderRadius = '30px';
+          toggleButton.style.padding = '0 20px';
+          toggleButton.style.fontFamily = "'Poppins', sans-serif";
+        }
+
+        // Remove "Powered by n8n" mais uma vez após customizar o botão
+        removePoweredByN8n();
+      }, 1000);
+
+      /* =======================================
+         PREVENÇÃO DE MENSAGENS VAZIAS
+       ======================================= */
+
+      // Intercepta tentativas de envio de mensagem vazia
+      setTimeout(() => {
+        const chatContainer = document.getElementById('iarev-chat');
+        if (chatContainer) {
+          // Intercepta cliques no botão de envio
+          chatContainer.addEventListener('click', function(e) {
+            const sendButton = e.target.closest('[data-testid="send-button"], .chat__input-send-button, button.svelte-1omdpz4');
+            if (sendButton) {
+              const input = chatContainer.querySelector('input.svelte-1omdpz4, textarea.svelte-1omdpz4');
+              if (input && !input.value.trim()) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.warn('Mensagem vazia bloqueada');
+                return false;
+              }
+            }
+          }, true);
+
+          // Intercepta eventos de teclado (Enter)
+          chatContainer.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+              const input = e.target;
+              if (input && (input.tagName === 'INPUT' || input.tagName === 'TEXTAREA') && !input.value.trim()) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.warn('Mensagem vazia bloqueada');
+                return false;
+              }
+            }
+          }, true);
+        }
+      }, 1500);
+    </script>
+</body>
+</html>
